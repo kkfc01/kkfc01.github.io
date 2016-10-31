@@ -1,0 +1,117 @@
+---
+title: "Practical Machine Learning Assignment"
+author: "KC"
+output: pdf_document
+---
+The aim of this project is to predict the type of activities done by a person based on data collected from various accelerometers placed on project participants. Details of the project can be found [here](http://groupware.les.inf.puc-rio.br/har).
+
+We begin by loading the necessary library and files.
+```{r, message=FALSE}
+library(caret)
+training = read.csv("~/pml-training.csv")
+testing = read.csv("~/pml-testing.csv")
+```
+
+The next task is to split the TRAINING data into 2 subgroups so we can cross validate the model before we apply it to the TESTING data.
+```{r}
+#Cross validation by spliting the TRAINING data into 80/20 (subtraining/control)
+inTrain <- createDataPartition(y=training$classe, p=0.80, list=FALSE)
+subtraining <- training[inTrain,]
+control <- training[-inTrain,]
+```
+
+Now it's time to clean and tidy the subgroups. Visual inspection of the data shows that columns 1 to 7 are not needed for the analysis. Then we need to remove columns with NA entries and/or check to see if there are any non-numeric entries.
+```{r}
+#Create a list with all the Classe from subtraining
+training_classe <- subtraining[,ncol(subtraining)]
+#Visual inspection shows that column 1 to 7 are not needed
+#Remove column 1-5 and 7 here
+processed_training <- subtraining[,-c(1,2,3,4,5,7)]
+#Create a list of TRUE/FALSE index for NA entries for all columns
+training_NA_cols <- sapply(processed_training, function(x) { any(is.na(x)) })
+#Remove columns with NA entries
+processed_training <- processed_training[ , !training_NA_cols]
+#Keep columns with only numbers
+processed_training  <- processed_training[, sapply(processed_training, is.numeric)]
+
+#Do the same to Control
+control_classe <- control[,ncol(control)]
+processed_control <- control[,-c(1,2,3,4,5,7)]
+control_NA_cols <- sapply(processed_control, function(x) { any(is.na(x)) })
+processed_control <- processed_control[ , !control_NA_cols]
+processed_control  <- processed_control[, sapply(processed_control, is.numeric)]
+processed_control <- cbind(processed_control, control_classe)
+```
+
+Despite having cleaned the data, the dimension of the data is still quite large. A principal component analysis (PCA) is used to transform the data and it is set such that it captures 95% of the variance. Once PCA is applied to the data, we combine the *classe* variables to the PCA-transformed data.
+```{r}
+#The dimension of the data is quite large (52 variables), applying PCA could help
+#PCA set to capture 95% of the variance
+pca <- preProcess(processed_training, method = "pca", thresh = 0.95)
+#Apply PCA to the processed training to reduce dimensionality
+pca_training <- predict(pca, processed_training)
+dim(processed_training)
+dim(pca_training)
+#From 52 to 25 variables
+#Combine the Training_Classe (from Clean and Tidy) back to the PCA_SubTraining
+pca_subtraining <- cbind(pca_training, training_classe)
+```
+We managed to reduce the number of variables from 52 down to 25, which is a good thing as it will significantly reduce the runtime of the model training in the next stage.
+
+Similarly, we will use PCA to transform the CONTROL data as well.
+```{r}
+#Apply the PCA earlier to the Control
+pca_control <- predict(pca,control[,-ncol(control)])
+```
+
+Random forest was chosen as the selected model to fit the data as there are just too many variables and it is not possible to know which variables are important for determining the *classe* variables.
+```{r,cache=TRUE, include=FALSE}
+#cache is set to TRUE to save time on re-computation
+
+#Using the Random Forest method
+tme <- proc.time()
+model_rf <- train(training_classe ~ ., data=pca_subtraining, method="rf")
+model_rf_runtime <- proc.time() - tme
+model_rf_runtime
+```
+
+Having trained a model, we can use it on the CONTROL data and calculate an out-of-sample error rate.
+```{r, message=FALSE}
+#Now to cross validate and see what the accuracy is
+cross_val <- predict(model_rf, pca_control)
+confusionMatrix(control$classe,cross_val)
+```
+
+We would expect the out-of-sample error rate to be less than 100% because the model wasn't trained on the CONTROL data, and we would expect an overfit to the SUBTRAINING data due to the noise within. As shown above, the accuracy of the model is at 98.55%
+
+Now we will clean and tidy the TESTING data and apply the same PCA transformation from above. The next step is to apply the trained random model to the TESTING data.
+```{r}
+#Process the testing data (same as Clean and Tidy)
+# testing_classe <- testing[,ncol(testing)]
+processed_testing <- testing[,-c(1,2,3,4,5,7)]
+testing_NA_cols <- sapply(processed_testing, function(x) { any(is.na(x)) })
+processed_testing <- processed_testing[ , !testing_NA_cols]
+processed_testing  <- processed_testing[, sapply(processed_testing, is.numeric)]
+# processed_testing <- cbind(processed_testing, testing_classe)
+
+#Apply the PCA to the testing
+#The last column in Process_Testing is a Problem ID, so it's not needed for prediction
+pca_testing <- predict(pca,processed_testing[,-ncol(processed_testing)])
+
+predictions <- predict(model_rf, pca_testing)
+#summary(predictions)
+
+#Display the predictions results in a barchart 
+ggplot(data.frame(predictions), aes(x=predictions)) + geom_bar()
+```
+
+From the above plot, we can see what the (total count) predictions are for the TESTING data. We would expect ~98% of these to be correct. (For the final quiz, we would expect our answers to have ~19 out of 20 correct.)
+
+```{r}
+#Predictions results in table format
+#For the final Quiz. Not needed for the report
+results <- data.frame(processed_testing$problem_id, predictions)
+results
+```
+
+P.S. My result for the final quiz was 18/20 which is fairly close to the expected answer.
