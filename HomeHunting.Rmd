@@ -9,6 +9,12 @@ output: ioslides_presentation
 knitr::opts_chunk$set(echo = FALSE)
 ```
 
+## Purpose of this slide
+
+- My family are looking for a new home at the moment
+- Each Saturday we would go and visit new homes built
+- The map will serve to give a visual map of the **location** and **relative house prices** at each location
+
 ## Saturday 07 Jan 2017
 
 - Size of each circle is Price/Land Area
