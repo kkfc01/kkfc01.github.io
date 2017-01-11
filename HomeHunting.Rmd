@@ -1,0 +1,39 @@
+---
+title: "House Hunting"
+author: "KC"
+date: "7 January 2017"
+output: ioslides_presentation
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+## Saturday 07 Jan 2017
+
+- Size of each circle is Price/Land Area
+- Click on each circle for link to access photos
+
+```{r, message=FALSE}
+library(leaflet)
+
+
+
+Sat0701 <- data.frame(price = c(1240, 2500, 1290, 1700),
+                      size = c(348, 520, 355, 400),
+                      lat = c(-33.946498, -33.955654, -33.966102, -33.957842),
+                      lng = c(151.033346, 151.103441, 151.003698, 151.045881))
+
+Sat0701_Sites <- c("<a href='http://www.domain.com.au/2013172860'>Arab Road, Padstow. $1.24M. 348sqm</a>",
+                   "<a href='http://www.domain.com.au/2013210041'>Wellington Road, Hurstville. $2.5M. 520sqm</a>",
+                   "<a href='http://www.domain.com.au/2013233212'>Ramsey Road, Picnic Point. $1.29M. 355sqm</a>",
+                   "<a href='http://www.domain.com.au/2013253060'>Clarke Street, Peakhurst. $1.7M. 400sqm</a>"
+                   )
+
+
+Sat0701 %>%
+  leaflet() %>%
+  addTiles() %>%
+  addMarkers(popup = Sat0701_Sites)
+
+```
