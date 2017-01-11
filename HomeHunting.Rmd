@@ -40,6 +40,6 @@ Sat0701_Sites <- c("<a href='http://www.domain.com.au/2013172860'>Arab Road, Pad
 Sat0701 %>%
   leaflet() %>%
   addTiles() %>%
-  addMarkers(popup = Sat0701_Sites)
+  addCircles(weight = 5, radius = Sat0701$price/Sat0701$size*10^2, popup = Sat0701_Sites)
 
 ```
