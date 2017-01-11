@@ -9,7 +9,7 @@ output: ioslides_presentation
 knitr::opts_chunk$set(echo = FALSE)
 ```
 
-## Purpose of this slide
+## Purpose of this presentation
 
 - My family are looking for a new home at the moment
 - Each Saturday we would go and visit new homes built
