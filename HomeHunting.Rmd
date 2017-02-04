@@ -1,7 +1,7 @@
 ---
 title: "House Hunting"
 author: "KC"
-date: "7 January 2017"
+date: "Last Update: 04 February 2017"
 output: ioslides_presentation
 ---
 
@@ -9,11 +9,11 @@ output: ioslides_presentation
 knitr::opts_chunk$set(echo = FALSE)
 ```
 
-## Purpose of this presentation
+<!-- ## Purpose of this presentation -->
 
-- My family are looking for a new home at the moment
-- Each Saturday we would go and visit new homes built
-- The map will serve to give a visual map of the **location** and **relative house prices** at each location
+<!-- - My family are looking for a new home at the moment -->
+<!-- - Each Saturday we would go and visit new homes built -->
+<!-- - The map will serve to give a visual map of the **location** and **relative house prices** at each location -->
 
 ## Saturday 07 Jan 2017
 
@@ -23,23 +23,167 @@ knitr::opts_chunk$set(echo = FALSE)
 ```{r, message=FALSE}
 library(leaflet)
 
-
-
-Sat0701 <- data.frame(price = c(1240, 2500, 1290, 1700),
+S0107 <- data.frame(price = c(1240, 2500, 1290, 1700),
                       size = c(348, 520, 355, 400),
                       lat = c(-33.946498, -33.955654, -33.966102, -33.957842),
                       lng = c(151.033346, 151.103441, 151.003698, 151.045881))
 
-Sat0701_Sites <- c("<a href='http://www.domain.com.au/2013172860'>Arab Road, Padstow. $1.24M. 348sqm</a>",
+S0107_Sites <- c("<a href='http://www.domain.com.au/2013172860'>Arab Road, Padstow. $1.24M. 348sqm</a>",
                    "<a href='http://www.domain.com.au/2013210041'>Wellington Road, Hurstville. $2.5M. 520sqm</a>",
                    "<a href='http://www.domain.com.au/2013233212'>Ramsey Road, Picnic Point. $1.29M. 355sqm</a>",
                    "<a href='http://www.domain.com.au/2013253060'>Clarke Street, Peakhurst. $1.7M. 400sqm</a>"
                    )
 
+Home <- data.frame(price = 1000,
+                  size = 220,
+                  lat = -33.956545,
+                  lng = 151.089851)
 
-Sat0701 %>%
+S0107 %>%
   leaflet() %>%
   addTiles() %>%
-  addCircles(weight = 5, radius = Sat0701$price/Sat0701$size*10^2, popup = Sat0701_Sites)
+  addMarkers(lat=-33.956598, lng=151.089894, popup="Home") %>%
+  addCircles(weight = 5, radius = S0107$price/S0107$size*10^2, popup = S0107_Sites)
+
+```
+
+## Saturday 14 Jan 2017
+
+- Size of each circle is Price/Land Area
+- Click on each circle for link to access photos
+
+```{r, message=FALSE}
+library(leaflet)
+
+S0114 <- data.frame(price = c(2199, 2000, 2500),
+                      size = c(815, 391, 758.8),
+                      lat = c(-33.780875, -33.778750, -33.767594),
+                      lng = c(151.077504, 151.061727, 151.054613))
+
+S0114_Sites <- c("<a href='http://www.domain.com.au/2013290125'>Epping Avenue, Epping. $2.199M. 815sqm</a>",
+                   "<a href='http://www.domain.com.au/2013013278'>Cumberland Street, Epping. $2M. 391sqm</a>",
+                   "<a href='http://www.domain.com.au/2013201856'>Tobruk Avenue, Carlingford. $2.5M. 758.8sqm</a>")
+
+Home <- data.frame(price = 1000,
+                  size = 220,
+                  lat = -33.956545,
+                  lng = 151.089851)
+
+S0114 %>%
+  leaflet() %>%
+  addTiles() %>%
+  #addMarkers(lat=-33.956598, lng=151.089894, popup="Home") %>%
+  addCircles(weight = 5, radius = S0114$price/S0114$size*10^2, popup = S0114_Sites)
+
+```
+
+## Saturday 21 Jan 2017
+
+- Size of each circle is Price/Land Area (NOTE: Scale is different to previous 2 slides)
+- Click on each circle for link to access photos
+
+```{r, message=FALSE}
+library(leaflet)
+
+S0121 <- data.frame(price = c(1750, 2700, 2380, 2180, 2200),
+                      size = c(538, 638, 538, 457, 450),
+                      lat = c(-33.952479, -33.973718, -33.953636, -33.953335, -33.953393),
+                      lng = c(151.111471, 151.105937, 151.097576, 151.098399, 151.098213))
+
+S0121_Sites <- c("<a href='http://www.domain.com.au/2013310752'>Ada Street, Bexley. $1.75M. 538sqm</a>",
+                   "<a href='http://www.domain.com.au/2013279129'>Woniora Road, South Hurstville. $2.7M. 638sqm</a>",
+                   "<a href='http://www.domain.com.au/2013227174'>Barnards Avenue, Hurstville. $2.38M. 538sqm</a>", "<a href='http://www.domain.com.au/2013148587'>Annie Street, Hurstville. $2.18M. 457sqm</a>", "<a href='http://www.domain.com.au/'>Barnards Avenue, Hurstville. $2.2M. 450sqm</a>")
+
+Home <- data.frame(price = 1000,
+                  size = 220,
+                  lat = -33.956545,
+                  lng = 151.089851)
+
+S0121 %>%
+  leaflet() %>%
+  addTiles() %>%
+  addMarkers(lat=-33.956598, lng=151.089894, popup="Home") %>%
+  addCircles(weight = 5, radius = S0121$price/S0121$size*10^1, popup = S0121_Sites)
+
+```
+
+## Saturday 04 Feb 2017
+
+- Size of each circle is Price/Land Area
+- Click on each circle for link to access photos
+
+```{r, message=FALSE}
+library(leaflet)
+
+S0204 <- data.frame(price = c(1725, 2100, 2400, 2380, 2150),
+                      size = c(370, 600, 520, 538, 500),
+                      lat = c(-33.956037, -33.990274, -33.955654, -33.953636, -33.950548),
+                      lng = c(151.090270, 151.076682, 151.103441, 151.097576, 151.111654))
+
+S0204_Sites <- c("<a href='https://www.domain.com.au/2013342472'>Millett Street, Hurstville. $1.725M. 370sqm</a>",
+                   "<a href='https://www.domain.com.au/property-profile/39a-wyong-street-oatley-nsw-2223'>Wyong Street, Oatley. $2.1M. 600sqm</a>",
+                   "<a href='http://www.domain.com.au/2013210041'>Wellington Road, Hurstville. $2.4M. 520sqm</a>", "<a href='http://www.domain.com.au/2013227174'>Barnards Avenue, Hurstville. $2.38M. 538sqm</a>", "<a href='https://www.domain.com.au/2013363081'>St George Road, Bexley. $2.15M. 500sqm</a>")
+
+Home <- data.frame(price = 1000,
+                  size = 220,
+                  lat = -33.956545,
+                  lng = 151.089851)
+
+S0204 %>%
+  leaflet() %>%
+  addTiles() %>%
+  addMarkers(lat=-33.956598, lng=151.089894, popup="Home") %>%
+  addCircles(weight = 5, radius = S0204$price/S0204$size*10^2, popup = S0204_Sites)
+
+```
+
+
+## Plot of Land Size (sqm) vs House Price
+```{r, message=FALSE, warning=FALSE}
+library(plotly)
+House_Price <- data.frame(price = c(124, 250, 129, 170, 220, 200, 250, 175, 270, 238, 218, 220, 172.5, 210, 240, 238, 215),
+                      size = c(348, 520, 355, 400, 815, 391, 758.8, 538, 638, 538, 457, 450, 370, 600, 520, 538, 500),
+                      location = c("South", "South", "South", "South", "North", "North", "North", "South", "South", "South", "South", "South", "South", "South", "South", "South", "South"))
+
+pal <- c("red", "blue")
+plot_ly(data = House_Price, x = ~size, y = ~price, color = ~location, colors=pal)
+#plot(House_Price$size, House_Price$price)
+```
+
+## Overall results
+
+<!-- - Size of each circle is Price/Land Area -->
+<!-- - Click on each circle for link to access photos -->
+
+```{r, message=FALSE}
+library(leaflet)
+
+S_all <- data.frame(price = c(1240, 2500, 1290, 1700, 2199, 2000, 2500, 1750, 2700, 2380, 2180, 2200, 1725, 2100, 2400, 2380, 2150),
+                      size = c(348, 520, 355, 400, 815, 391, 758.8, 538, 638, 538, 457, 450, 370, 600, 520, 538, 500),
+                      lat = c(-33.946498, -33.955654, -33.966102, -33.957842, -33.780875, -33.778750, -33.767594, -33.952479, -33.973718, -33.953636, -33.953335, -33.953393, -33.956037, -33.990274, -33.955654, -33.953636, -33.950548),
+                      lng = c(151.033346, 151.103441, 151.003698, 151.045881, 151.077504, 151.061727, 151.054613, 151.111471, 151.105937, 151.097576, 151.098399, 151.098213, 151.090270, 151.076682, 151.103441, 151.097576, 151.111654))
+
+S_all_Sites <- c("<a href='http://www.domain.com.au/2013172860'>Arab Road, Padstow. $1.24M. 348sqm</a>",
+                   "<a href='http://www.domain.com.au/2013210041'>Wellington Road, Hurstville. $2.5M. 520sqm</a>",
+                   "<a href='http://www.domain.com.au/2013233212'>Ramsey Road, Picnic Point. $1.29M. 355sqm</a>",
+                   "<a href='http://www.domain.com.au/2013253060'>Clarke Street, Peakhurst. $1.7M. 400sqm</a>", "<a href='http://www.domain.com.au/2013290125'>Epping Avenue, Epping. $2.199M. 815sqm</a>",
+                   "<a href='http://www.domain.com.au/2013013278'>Cumberland Street, Epping. $2M. 391sqm</a>",
+                   "<a href='http://www.domain.com.au/2013201856'>Tobruk Avenue, Carlingford. $2.5M. 758.8sqm</a>", "<a href='http://www.domain.com.au/2013310752'>Ada Street, Bexley. $1.75M. 538sqm</a>",
+                   "<a href='http://www.domain.com.au/2013279129'>Woniora Road, South Hurstville. $2.7M. 638sqm</a>",
+                   "<a href='http://www.domain.com.au/2013227174'>Barnards Avenue, Hurstville. $2.38M. 538sqm</a>", "<a href='http://www.domain.com.au/2013148587'>Annie Street, Hurstville. $2.18M. 457sqm</a>", "<a href=''>Barnards Avenue, Hurstville. $2.2M. 450sqm</a>", "<a href='https://www.domain.com.au/2013342472'>Millett Street, Hurstville. $1.725M. 370sqm</a>",
+                   "<a href='https://www.domain.com.au/property-profile/39a-wyong-street-oatley-nsw-2223'>Wyong Street, Oatley. $2.1M. 600sqm</a>",
+                   "<a href='http://www.domain.com.au/2013210041'>Wellington Road, Hurstville. $2.4M. 520sqm</a>", "<a href='http://www.domain.com.au/2013227174'>Barnards Avenue, Hurstville. $2.38M. 538sqm</a>", "<a href='https://www.domain.com.au/2013363081'>St George Road, Bexley. $2.15M. 500sqm</a>"
+                 )
+
+Home <- data.frame(price = 1000,
+                  size = 220,
+                  lat = -33.956545,
+                  lng = 151.089851)
+
+S_all %>%
+  leaflet() %>%
+  addTiles() %>%
+  addMarkers(lat=-33.956598, lng=151.089894, popup="Home") %>%
+  addCircles(weight = 5, radius = S_all$price/S_all$size*10^2, popup = S_all_Sites)
 
 ```
